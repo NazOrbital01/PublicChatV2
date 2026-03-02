@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naze Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f6f8fc 0%, #e9eef4 100%);
+        }
+        
+        body.dark {
+            background: linear-gradient(145deg, #0f1219 0%, #1a1f2b 100%);
+        }
+        
+        .container {
+            width: 100%;
+            height: 100vh;
+            max-width: 100%;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Login screen center */
+        #loginScreen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 24px 20px;
+            overflow-y: auto;
+        }
+
+        /* Main screen full height flex */
+        #mainScreen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-header {
+            padding: 14px 16px 8px;
+            flex-shrink: 0;
+        }
+
+        #contentArea {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 14px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screen {
+            padding: 16px 14px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 32px;
+            padding: 24px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(0, 0, 0, 0.02) inset;
+            margin-bottom: 16px;
+        }
+        
+        body.dark .card {
+            background: #232a36;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            color: white;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            background: #f8fafd;
+            border: 2px solid transparent;
+            border-radius: 40px;
+            font-size: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+        
+        .input-field:focus {
+            border-color: #5f9ea0;
+            background: white;
+            outline: none;
+            box-shadow: 0 10px 20px rgba(95, 158, 160, 0.1);
+        }
+        
+        body.dark .input-field {
+            background: #1e2430;
+            color: white;
+            border-color: #2f3542;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 4px 0;
+        }
+        
+        .btn-primary {
+            background: #1e293b;
+            color: white;
+            box-shadow: 0 10px 20px -5px #1e293b80;
+        }
+        
+        .btn-success {
+            background: #0f5e4a;
+            color: white;
+            box-shadow: 0 10px 20px -5px #0f5e4a80;
+        }
+        
+        .btn-danger {
+            background: #b13e3e;
+            color: white;
+            box-shadow: 0 10px 20px -5px #b13e3e80;
+        }
+        
+        .btn-warning {
+            background: #b45b0f;
+            color: white;
+        }
+        
+        .btn:active {
+            transform: scale(0.97);
+        }
+        
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 16px 20px;
+            background: transparent;
+            margin-top: 8px;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 24px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #6b7280;
+        }
+        
+        .nav-item i {
+            font-size: 24px;
+        }
+        
+        .nav-item span {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .nav-item.active {
+            background: white;
+            color: #1e293b;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        body.dark .nav-item.active {
+            background: #2d3443;
+            color: white;
+        }
+        
+        .chat-box {
+            background: #f8fafd;
+            border-radius: 32px;
+            padding: 20px;
+            max-height: 220px;
+            overflow-y: auto;
+            margin: 16px 0;
+        }
+        
+        body.dark .chat-box {
+            background: #1a202c;
+        }
+        
+        .chat-message {
+            background: white;
+            padding: 14px 18px;
+            border-radius: 24px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+        
+        body.dark .chat-message {
+            background: #2d3443;
+            color: white;
+        }
+        
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+        
+        .toggle {
+            width: 52px;
+            height: 28px;
+            background: #cbd5e0;
+            border-radius: 34px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .toggle.active {
+            background: #0f5e4a;
+        }
+        
+        .toggle:after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle.active:after {
+            left: 26px;
+        }
+        
+        .account-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f0f4f9;
+            padding: 14px 18px;
+            border-radius: 60px;
+            margin: 8px 0;
+        }
+        
+        body.dark .account-item {
+            background: #2d3443;
+        }
+        
+        .account-item.active {
+            background: #0f5e4a20;
+            border: 2px solid #0f5e4a;
+        }
+        
+        .badge {
+            background: #eef2f6;
+            padding: 8px 16px;
+            border-radius: 60px;
+            font-weight: 500;
+        }
+        
+        body.dark .badge {
+            background: #2d3443;
+            color: white;
+        }
+        
+        .alert {
+            padding: 12px;
+            border-radius: 30px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        .alert-success {
+            background: #0f5e4a;
+            color: white;
+        }
+        
+        .alert-error {
+            background: #b13e3e;
+            color: white;
+        }
+
+        /* Custom Modal (pengganti confirm/alert bawaan) */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 32px;
+            padding: 28px 24px;
+            max-width: 340px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            text-align: center;
+        }
+
+        body.dark .modal-box {
+            background: #232a36;
+            color: white;
+        }
+
+        .modal-box p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-buttons .btn {
+            margin: 0;
+        }
+        
+        .wa-float {
+            position: fixed;
+            bottom: 20px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px #25D36660;
+            border: 2px solid white;
+            z-index: 1000;
+            transition: all 0.2s;
+        }
+        
+        .wa-float:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Logo login dark mode */
+        body.dark .logo-title {
+            color: #e2e8f0 !important;
+        }
+        body.dark .logo-subtitle {
+            color: #94a3b8 !important;
+        }
+
+        /* Full Text Overlay */
+        .fulltext-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .fulltext-blur-bg {
+            position: fixed;
+            inset: 0;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.45);
+            z-index: 2000;
+        }
+
+        .fulltext-box {
+            position: relative;
+            z-index: 2001;
+            background: white;
+            border-radius: 28px;
+            padding: 24px 20px;
+            max-width: 360px;
+            width: 100%;
+            max-height: 75vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        body.dark .fulltext-box {
+            background: #232a36;
+            color: white;
+        }
+
+        .fulltext-header {
+            font-weight: 700;
+            font-size: 14px;
+            color: #0f5e4a;
+            margin-bottom: 12px;
+        }
+
+        .fulltext-text {
+            font-size: 15px;
+            line-height: 1.7;
+            word-break: break-word;
+        }
+
+        /* Full Text tombol di chat */
+        .fulltext-btn {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 4px 12px;
+            background: #1e293b;
+            color: white;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Sync status */
+        .sync-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: #e2f4ee;
+            color: #0f5e4a;
+            margin-left: 6px;
+        }
+
+        body.dark .sync-badge {
+            background: #1a3d30;
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Modal -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+        <div class="modal-box">
+            <p id="modalText"></p>
+            <div class="modal-buttons" id="modalButtons"></div>
+        </div>
+    </div>
+
+    <!-- Full Text Overlay -->
+    <div id="fulltextOverlay" style="display:none;">
+        <div class="fulltext-blur-bg" id="fulltextBg"></div>
+        <div class="fulltext-overlay">
+            <div class="fulltext-box" id="fulltextBox">
+                <div class="fulltext-header" id="fulltextHeader"></div>
+                <div class="fulltext-text" id="fulltextContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Button -->
+    <div class="wa-float" onclick="window.open('https://wa.me/6285749566337?text=Halo%20Owner%20Naze%20Community')">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="appContainer">
+        <!-- Login Screen -->
+        <div id="loginScreen">
+            <div class="card" style="text-align: center;">
+                <!-- Logo Naze - CSS based, aman untuk WebView Android -->
+                <div style="margin-bottom: 20px;">
+                    <div style="
+                        width: 80px; height: 80px;
+                        background: linear-gradient(135deg, #1e293b 0%, #0f5e4a 100%);
+                        border-radius: 24px;
+                        display: flex; align-items: center; justify-content: center;
+                        margin: 0 auto 12px;
+                        box-shadow: 0 10px 25px rgba(15,94,74,0.35);
+                    ">
+                        <!-- Mahkota SVG -->
+                        <svg width="46" height="38" viewBox="0 0 46 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Badan mahkota -->
+                            <path d="M4 34 L4 22 L12 10 L23 20 L34 10 L42 22 L42 34 Z" fill="#FFD700" stroke="#FFA500" stroke-width="1.5" stroke-linejoin="round"/>
+                            <!-- Garis bawah mahkota -->
+                            <rect x="4" y="30" width="38" height="6" rx="3" fill="#FFA500"/>
+                            <!-- Bola kiri -->
+                            <circle cx="4" cy="22" r="3.5" fill="#FFD700" stroke="#FFA500" stroke-width="1.2"/>
+                            <!-- Bola tengah atas -->
+                            <circle cx="23" cy="8" r="4" fill="#FFD700" stroke="#FFA500" stroke-width="1.2"/>
+                            <!-- Bola kanan -->
+                            <circle cx="42" cy="22" r="3.5" fill="#FFD700" stroke="#FFA500" stroke-width="1.2"/>
+                            <!-- Permata tengah -->
+                            <circle cx="23" cy="26" r="4" fill="white" opacity="0.85"/>
+                        </svg>
+                    </div>
+                    <h2 class="logo-title" style="font-size: 26px; font-weight: 800; letter-spacing: 3px; color: #1e293b;">NAZE</h2>
+                </div>
+                <p class="logo-subtitle" style="color: #666; margin-bottom: 30px;">Community Chat</p>
+                
+                <input type="text" id="loginUser" class="input-field" placeholder="Username">
+                <input type="password" id="loginPass" class="input-field" placeholder="Password">
+                
+                <button class="btn btn-primary" onclick="login()">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+                
+                <div id="loginError" style="color: #b13e3e; margin-top: 16px; min-height: 24px;"></div>
+            </div>
+        </div>
+
+        <!-- Main App Screen -->
+        <div id="mainScreen" class="hidden">
+            <!-- Header -->
+            <div class="main-header header">
+                <span class="badge" id="userBadge">Loading...</span>
+                <span class="badge" id="expireBadge">...</span>
+            </div>
+
+            <!-- Content Scrollable -->
+            <div id="contentArea"></div>
+
+            <!-- Bottom Nav -->
+            <div class="bottom-nav" style="flex-shrink:0;">
+                <div class="nav-item active" onclick="showHome()" id="navHome">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item" onclick="showSetting()" id="navSetting">
+                    <i class="fas fa-cog"></i>
+                    <span>Setting</span>
+                </div>
+                <div class="nav-item" onclick="showAccount()" id="navAccount">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Account</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CUSTOM MODAL ====================
+        // Mengganti confirm() & alert() bawaan browser yang sering diblokir di mobile/webview
+
+        function showAlert(message, callback) {
+            const overlay = document.getElementById('modalOverlay');
+            document.getElementById('modalText').textContent = message;
+            document.getElementById('modalButtons').innerHTML = '';
+
+            const okBtn = document.createElement('button');
+            okBtn.className = 'btn btn-primary';
+            okBtn.style.flex = '1';
+            okBtn.textContent = 'OK';
+            okBtn.onclick = function() {
+                overlay.classList.add('hidden');
+                if (callback) callback();
+            };
+
+            document.getElementById('modalButtons').appendChild(okBtn);
+            overlay.classList.remove('hidden');
+        }
+
+        function showConfirm(message, onYes, onNo) {
+            const overlay = document.getElementById('modalOverlay');
+            document.getElementById('modalText').textContent = message;
+            document.getElementById('modalButtons').innerHTML = '';
+
+            const noBtn = document.createElement('button');
+            noBtn.className = 'btn btn-danger';
+            noBtn.style.flex = '1';
+            noBtn.textContent = 'Batal';
+            noBtn.onclick = function() {
+                overlay.classList.add('hidden');
+                if (onNo) onNo();
+            };
+
+            const yesBtn = document.createElement('button');
+            yesBtn.className = 'btn btn-success';
+            yesBtn.style.flex = '1';
+            yesBtn.textContent = 'Ya';
+            yesBtn.onclick = function() {
+                overlay.classList.add('hidden');
+                if (onYes) onYes();
+            };
+
+            document.getElementById('modalButtons').appendChild(noBtn);
+            document.getElementById('modalButtons').appendChild(yesBtn);
+            overlay.classList.remove('hidden');
+        }
+
+        // ==================== DATABASE TERPUSAT (JSONBin.io) ====================
+        // JSONBin dipakai sebagai "server" gratis supaya akun bisa login dari device lain
+        // Ganti JSONBIN_ID dan JSONBIN_KEY dengan milik kamu sendiri dari jsonbin.io
+        const JSONBIN_ID  = '69a4104343b1c97be9a8ee47';
+        const JSONBIN_KEY = '$2a$10$J2keBI1AerWo66qiXMQMV./myfEP6sXDpHhEUNONhPUyYJlvhzge.';
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
+        // Fallback ke localStorage jika offline / belum setup JSONBin
+        let useCloud = (JSONBIN_ID !== 'GANTI_BIN_ID_KAMU');
+
+        // ---- Helper cloud ----
+        async function fetchCloudDB() {
+            try {
+                const res = await fetch(JSONBIN_URL + '/latest', {
+                    headers: { 'X-Master-Key': JSONBIN_KEY }
+                });
+                if (!res.ok) return null;
+                const data = await res.json();
+                return data.record;
+            } catch(e) { return null; }
+        }
+
+        async function pushCloudDB(record) {
+            try {
+                await fetch(JSONBIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_KEY
+                    },
+                    body: JSON.stringify(record)
+                });
+            } catch(e) {}
+        }
+
+        // Bangun record penuh dari localStorage dan push ke cloud
+        function pushAll() {
+            if (!useCloud) return;
+            const record = {
+                accounts: JSON.parse(localStorage.getItem('naze_accounts') || '[]'),
+                chats:    JSON.parse(localStorage.getItem('naze_chats')    || '[]')
+            };
+            pushCloudDB(record);
+        }
+
+        // ==================== LOCAL DATABASE FALLBACK ====================
+        if (!localStorage.getItem('naze_accounts')) {
+            const owner = {
+                username: 'Naze',
+                password: 'DarkJava',
+                role: 'owner',
+                expire: '2099-12-12',
+                tag: 'TheFounder',
+                privateTag: false,
+                privateUser: false,
+                darkMode: false
+            };
+            localStorage.setItem('naze_accounts', JSON.stringify([owner]));
+        }
+        
+        if (!localStorage.getItem('naze_chats')) {
+            localStorage.setItem('naze_chats', JSON.stringify([]));
+        }
+
+        // ==================== GLOBAL ====================
+        let accounts    = JSON.parse(localStorage.getItem('naze_accounts'));
+        let currentUser = accounts[0].username;
+        let currentNav  = 'home';
+        let syncInterval = null;
+
+        // ==================== FUNGSI DATABASE ====================
+        function saveAccounts() {
+            localStorage.setItem('naze_accounts', JSON.stringify(accounts));
+            pushAll(); // push akun + chat sekaligus ke cloud
+        }
+
+        function saveChats(chats) {
+            localStorage.setItem('naze_chats', JSON.stringify(chats));
+            pushAll(); // push akun + chat sekaligus ke cloud
+        }
+
+        async function syncFromCloud() {
+            if (!useCloud) return;
+            const record = await fetchCloudDB();
+            if (!record) return;
+            // Sync akun dari cloud ke lokal
+            if (record.accounts && record.accounts.length > 0) {
+                accounts = record.accounts;
+                localStorage.setItem('naze_accounts', JSON.stringify(accounts));
+            }
+            // Sync chat dari cloud ke lokal
+            if (record.chats) {
+                localStorage.setItem('naze_chats', JSON.stringify(record.chats));
+            }
+        }
+
+        function startAutoSync() {
+            if (!useCloud) return;
+            if (syncInterval) clearInterval(syncInterval);
+            syncInterval = setInterval(async () => {
+                const record = await fetchCloudDB();
+                if (!record) return;
+                // Update chat lokal dari cloud
+                if (record.chats) {
+                    localStorage.setItem('naze_chats', JSON.stringify(record.chats));
+                    if (currentNav === 'home') loadChat();
+                }
+                // Update akun lokal dari cloud (misal ada akun baru dibuat owner)
+                if (record.accounts && record.accounts.length > 0) {
+                    accounts = record.accounts;
+                    localStorage.setItem('naze_accounts', JSON.stringify(accounts));
+                }
+            }, 5000); // sync tiap 5 detik
+        }
+
+        function getUser(username) {
+            return accounts.find(acc => acc.username === username);
+        }
+
+        function getCurrentUser() {
+            return accounts.find(acc => acc.username === currentUser);
+        }
+
+        function isExpired(expireDate) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const exp = new Date(expireDate);
+            return today > exp;
+        }
+
+        // ==================== FULL TEXT ====================
+        const CHAR_LIMIT = 120; // karakter sebelum dipotong
+
+        function showFullText(name, tag, time, fullText) {
+            document.getElementById('fulltextHeader').textContent = `${name} (${tag}) • ${time}`;
+            document.getElementById('fulltextContent').textContent = fullText;
+            document.getElementById('fulltextOverlay').style.display = 'block';
+        }
+
+        function closeFullText() {
+            document.getElementById('fulltextOverlay').style.display = 'none';
+        }
+
+        // Tutup full text saat klik luar box
+        document.getElementById('fulltextBg').addEventListener('click', closeFullText);
+        document.getElementById('fulltextOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeFullText();
+        });
+
+        // ==================== UPDATE UI ====================
+        function updateHeader() {
+            const user = getCurrentUser();
+            if (!user) return;
+            
+            document.getElementById('userBadge').innerHTML = `<i class="fas fa-user"></i> ${user.username} (${user.role})`;
+            document.getElementById('expireBadge').innerHTML = `⏳ ${user.expire}`;
+            
+            if (user.darkMode) {
+                document.body.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark');
+            }
+        }
+
+        function showHome() {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('navHome').classList.add('active');
+            currentNav = 'home';
+            
+            const user = getCurrentUser();
+            if (!user) return;
+            
+            let html = `
+                <div class="card" style="text-align: center;">
+                    <h1 style="font-size: 32px; letter-spacing: 2px;">NAZE</h1>
+                    <h2 style="margin-bottom: 16px;">COMMUNITY</h2>
+                    <hr style="width: 60px; margin: 16px auto;">
+                    
+                    <div style="margin: 16px 0;">
+                        <p><i class="far fa-calendar-alt"></i> Kadaluarsa: ${user.expire}</p>
+                        <p style="font-size: 20px; font-weight: bold;">🏷️ ${user.tag}</p>
+                        <p style="font-size: 18px;">👤 ${user.username}</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4 style="margin-bottom: 12px;">💬 Public Chat</h4>
+                    <div class="chat-box" id="chatMessages"></div>
+                    
+                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        <input type="text" id="chatInput" class="input-field" style="margin: 0; flex: 1;" placeholder="Ketik pesan...">
+                        <button class="btn btn-primary" style="width: auto;" onclick="sendChat()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('contentArea').innerHTML = html;
+            loadChat();
+        }
+
+        function loadChat() {
+            const chats = JSON.parse(localStorage.getItem('naze_chats')) || [];
+            const chatBox = document.getElementById('chatMessages');
+            if (!chatBox) return;
+            
+            // Ambil timestamp hapus milik user ini (per-user, hanya lokal)
+            const clearKey = `naze_cleared_${currentUser}`;
+            const clearedAt = parseInt(localStorage.getItem(clearKey) || '0');
+
+            // Filter: hanya tampilkan chat yang dikirim SETELAH user ini hapus
+            const visibleChats = chats.filter(chat => (chat.ts || 0) > clearedAt);
+
+            // Simpan posisi scroll
+            const prevScroll = chatBox.scrollTop;
+            const wasAtBottom = chatBox.scrollHeight - chatBox.clientHeight - prevScroll < 30;
+
+            let html = '';
+            if (visibleChats.length === 0) {
+                html = '<p style="text-align: center; color: #888;">Belum ada pesan</p>';
+            } else {
+                visibleChats.slice(-20).forEach((chat) => {
+                    const sender = getUser(chat.sender);
+                    let name = chat.sender;
+                    let tag  = chat.tag;
+                    
+                    if (sender) {
+                        if (sender.privateUser) name = 'PrivateUser';
+                        if (sender.privateTag)  tag  = 'PrivateTag';
+                    }
+
+                    const isLong  = chat.text.length > CHAR_LIMIT;
+                    const preview = isLong ? chat.text.substring(0, CHAR_LIMIT) + '...' : chat.text;
+                    const encoded = encodeURIComponent(chat.text);
+                    const encName = encodeURIComponent(name);
+                    const encTag  = encodeURIComponent(tag);
+
+                    html += `<div class="chat-message">
+                        <strong>${name} (${tag})</strong> • ${chat.time}<br>
+                        <span>${preview}</span>
+                        ${isLong ? `<br><button class="fulltext-btn" 
+                            data-text="${encoded}" 
+                            data-name="${encName}" 
+                            data-tag="${encTag}" 
+                            data-time="${chat.time}">Full Text</button>` : ''}
+                    </div>`;
+                });
+            }
+            chatBox.innerHTML = html;
+
+            // Event listener tombol Full Text
+            chatBox.querySelectorAll('.fulltext-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showFullText(
+                        decodeURIComponent(this.dataset.name),
+                        decodeURIComponent(this.dataset.tag),
+                        this.dataset.time,
+                        decodeURIComponent(this.dataset.text)
+                    );
+                });
+            });
+
+            if (wasAtBottom) chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        window.sendChat = function() {
+            const input = document.getElementById('chatInput');
+            if (!input.value.trim()) return;
+            
+            const user = getCurrentUser();
+            const now  = new Date();
+            const time = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            const chats = JSON.parse(localStorage.getItem('naze_chats')) || [];
+            chats.push({
+                sender: user.username,
+                tag:    user.tag,
+                text:   input.value,
+                time:   time,
+                ts:     Date.now()   // timestamp untuk fitur hapus per-user
+            });
+            
+            saveChats(chats);
+            input.value = '';
+            loadChat();
+        };
+
+        // ==================== SETTING ====================
+        window.showSetting = function() {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('navSetting').classList.add('active');
+            currentNav = 'setting';
+            
+            const user = getCurrentUser();
+            if (!user) return;
+            
+            let html = `<div class="card">`;
+            
+            html += `
+                <div class="toggle-row">
+                    <span><i class="fas fa-moon"></i> DarkTheme</span>
+                    <div class="toggle ${user.darkMode ? 'active' : ''}" onclick="toggleDark()"></div>
+                </div>
+                <div class="toggle-row">
+                    <span><i class="fas fa-lock"></i> Private Tag</span>
+                    <div class="toggle ${user.privateTag ? 'active' : ''}" onclick="togglePrivateTag()"></div>
+                </div>
+                <div class="toggle-row">
+                    <span><i class="fas fa-user-secret"></i> Private User</span>
+                    <div class="toggle ${user.privateUser ? 'active' : ''}" onclick="togglePrivateUser()"></div>
+                </div>
+                
+                <button class="btn btn-danger" style="margin-top: 20px;" id="btnClearChat">
+                    <i class="fas fa-trash-alt"></i> Hapus Semua Chat
+                </button>
+            `;
+            
+            if (user.role === 'owner' || user.role === 'admin') {
+                html += `<hr style="margin: 20px 0;">`;
+                html += `<h4 style="margin-bottom: 16px;">➕ Buat Akun Baru</h4>`;
+                
+                html += `
+                    <input type="text" id="newUsername" class="input-field" placeholder="Username">
+                    <input type="password" id="newPassword" class="input-field" placeholder="Password">
+                    <input type="text" id="newExpire" class="input-field" placeholder="Kadaluarsa (contoh: 30d)" value="30d">
+                `;
+                
+                if (user.role === 'owner') {
+                    html += `<button class="btn btn-success" id="btnAddMember">➕ Add Member</button>`;
+                    html += `<button class="btn btn-warning" id="btnAddAdmin">👑 Add Admin</button>`;
+                } else {
+                    html += `<button class="btn btn-success" id="btnAddMember">➕ Add Member</button>`;
+                }
+                
+                html += `<div id="createMessage" style="margin-top: 10px;"></div>`;
+            }
+            
+            if (user.role === 'owner') {
+                html += `<hr style="margin: 20px 0;">`;
+                html += `<h4 style="margin-bottom: 16px;">👥 Hapus Akun</h4>`;
+                
+                accounts.filter(acc => acc.username !== user.username).forEach(acc => {
+                    // Encode username ke index supaya aman dari karakter spesial
+                    const idx = accounts.findIndex(a => a.username === acc.username);
+                    html += `
+                        <div class="account-item">
+                            <span><strong>${acc.username}</strong> (${acc.role})</span>
+                            <button class="btn btn-danger" style="width: auto;" data-delete-idx="${idx}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += `</div>`;
+            document.getElementById('contentArea').innerHTML = html;
+
+            // ===== PASANG EVENT LISTENER SETELAH HTML DIRENDER =====
+
+            // Tombol Hapus Chat
+            const btnClear = document.getElementById('btnClearChat');
+            if (btnClear) {
+                btnClear.addEventListener('click', function() {
+                    showConfirm('Hapus semua chat di layarmu?\n(Chat orang lain tidak terpengaruh)', function() {
+                        // Simpan timestamp hapus hanya untuk user ini secara lokal
+                        const clearKey = `naze_cleared_${currentUser}`;
+                        localStorage.setItem(clearKey, Date.now().toString());
+                        showAlert('Chat berhasil disembunyikan!', function() {
+                            if (currentNav === 'home') loadChat();
+                        });
+                    });
+                });
+            }
+
+            // Tombol Add Member
+            const btnMember = document.getElementById('btnAddMember');
+            if (btnMember) {
+                btnMember.addEventListener('click', function() { createAccount('member'); });
+            }
+
+            // Tombol Add Admin
+            const btnAdmin = document.getElementById('btnAddAdmin');
+            if (btnAdmin) {
+                btnAdmin.addEventListener('click', function() { createAccount('admin'); });
+            }
+
+            // Tombol Hapus Akun (event delegation pada contentArea)
+            document.getElementById('contentArea').addEventListener('click', function(e) {
+                const btn = e.target.closest('[data-delete-idx]');
+                if (!btn) return;
+                const idx = parseInt(btn.getAttribute('data-delete-idx'));
+                const targetAcc = accounts[idx];
+                if (!targetAcc) return;
+
+                showConfirm(`Hapus akun ${targetAcc.username}?`, function() {
+                    accounts.splice(idx, 1);
+                    saveAccounts();
+
+                    if (targetAcc.username === currentUser) {
+                        currentUser = accounts[0].username;
+                    }
+
+                    showAlert(`Akun ${targetAcc.username} berhasil dihapus!`, function() {
+                        updateHeader();
+                        showSetting();
+                    });
+                });
+            });
+        };
+
+        // ==================== FUNGSI SETTING ====================
+        window.toggleDark = function() {
+            const user = getCurrentUser();
+            user.darkMode = !user.darkMode;
+            saveAccounts();
+            updateHeader();
+            showSetting();
+        };
+
+        window.togglePrivateTag = function() {
+            const user = getCurrentUser();
+            user.privateTag = !user.privateTag;
+            saveAccounts();
+            showSetting();
+        };
+
+        window.togglePrivateUser = function() {
+            const user = getCurrentUser();
+            user.privateUser = !user.privateUser;
+            saveAccounts();
+            showSetting();
+        };
+
+        window.createAccount = function(role) {
+            const username = document.getElementById('newUsername')?.value.trim();
+            const password = document.getElementById('newPassword')?.value.trim();
+            const expireInput = document.getElementById('newExpire')?.value.trim() || '30d';
+            
+            if (!username || !password) {
+                document.getElementById('createMessage').innerHTML = '<div class="alert alert-error">Username dan password harus diisi!</div>';
+                return;
+            }
+            
+            if (accounts.find(acc => acc.username === username)) {
+                document.getElementById('createMessage').innerHTML = '<div class="alert alert-error">Username sudah digunakan!</div>';
+                return;
+            }
+            
+            let days = 30;
+            const match = expireInput.match(/(\d+)d/);
+            if (match) days = parseInt(match[1]);
+            else days = parseInt(expireInput) || 30;
+            
+            const expireDate = new Date();
+            expireDate.setDate(expireDate.getDate() + days);
+            const expireStr = expireDate.toISOString().split('T')[0];
+            
+            const newAccount = {
+                username: username,
+                password: password,
+                role: role,
+                expire: expireStr,
+                tag: role === 'admin' ? 'Admin' : 'Member',
+                privateTag: false,
+                privateUser: false,
+                darkMode: false
+            };
+            
+            accounts.push(newAccount);
+            saveAccounts();
+            
+            document.getElementById('createMessage').innerHTML = `<div class="alert alert-success">✓ Akun ${username} (${role}) berhasil dibuat!</div>`;
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('newExpire').value = '30d';
+        };
+
+        // ==================== ACCOUNT ====================
+        window.showAccount = function() {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('navAccount').classList.add('active');
+            currentNav = 'account';
+            
+            const user = getCurrentUser();
+            if (!user) return;
+
+            // Akun yang pernah login di device ini (tersimpan lokal)
+            const deviceAccounts = JSON.parse(localStorage.getItem('naze_device_accounts') || '[]');
+            // Pastikan akun aktif selalu ada di list
+            if (!deviceAccounts.includes(currentUser)) {
+                deviceAccounts.push(currentUser);
+                localStorage.setItem('naze_device_accounts', JSON.stringify(deviceAccounts));
+            }
+            // Filter: hanya akun yang ada di database global
+            const switchableAccounts = accounts.filter(acc => deviceAccounts.includes(acc.username));
+            
+            let html = `
+                <div class="card">
+                    <h3 style="margin-bottom: 16px;">📋 Profile</h3>
+                    <p><strong>Username:</strong> ${user.username}</p>
+                    <p><strong>Role:</strong> ${user.role}</p>
+                    <p><strong>Tag:</strong> ${user.tag}</p>
+                    <p><strong>Expire:</strong> ${user.expire}</p>
+                    
+                    <hr style="margin: 20px 0;">
+                    <h4 style="margin-bottom: 16px;">🔄 Switch Akun (${switchableAccounts.length})</h4>
+            `;
+            
+            switchableAccounts.forEach(acc => {
+                if (acc.username === currentUser) {
+                    html += `<div class="account-item active">
+                        <span><i class="fas fa-check-circle"></i> ${acc.username} (${acc.role})</span>
+                        <span>Aktif</span>
+                    </div>`;
+                } else {
+                    const idx = accounts.findIndex(a => a.username === acc.username);
+                    html += `<div class="account-item">
+                        <span>${acc.username} (${acc.role})</span>
+                        <button class="btn btn-primary" style="width: auto;" data-switch-idx="${idx}">Pindah</button>
+                    </div>`;
+                }
+            });
+
+            html += `
+                    <button class="btn btn-success" style="margin-top: 16px;" id="btnAddNewAccount">
+                        <i class="fas fa-plus"></i> Tambah Akun
+                    </button>
+                    <button class="btn btn-warning" style="margin-top: 8px;" id="btnLogout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+            `;
+            
+            if (switchableAccounts.length > 1) {
+                html += `<button class="btn btn-danger" style="margin-top: 8px;" id="btnDeleteCurrent">
+                    <i class="fas fa-trash"></i> Hapus Akun Ini
+                </button>`;
+            }
+            
+            html += `</div>`;
+            document.getElementById('contentArea').innerHTML = html;
+
+            // Event listener switch akun
+            document.getElementById('contentArea').addEventListener('click', function(e) {
+                const switchBtn = e.target.closest('[data-switch-idx]');
+                if (switchBtn) {
+                    const idx = parseInt(switchBtn.getAttribute('data-switch-idx'));
+                    doSwitchAccount(accounts[idx].username);
+                    return;
+                }
+            });
+
+            // Tombol Tambah Akun Baru
+            const btnAdd = document.getElementById('btnAddNewAccount');
+            if (btnAdd) btnAdd.addEventListener('click', addNewAccount);
+
+            // Tombol Logout
+            const btnLogout = document.getElementById('btnLogout');
+            if (btnLogout) btnLogout.addEventListener('click', doLogout);
+
+            // Tombol Hapus Akun Ini
+            const btnDel = document.getElementById('btnDeleteCurrent');
+            if (btnDel) btnDel.addEventListener('click', deleteCurrentAccount);
+        };
+
+        // ==================== FUNGSI ACCOUNT ====================
+
+        function doSwitchAccount(username) {
+            currentUser = username;
+            // Simpan sebagai akun terakhir di device ini
+            localStorage.setItem('naze_last_user', username);
+            updateHeader();
+            showHome();
+        }
+
+        function doLogout() {
+            showConfirm('Yakin mau logout?', function() {
+                if (syncInterval) clearInterval(syncInterval);
+                // Hapus akun terakhir (paksa login ulang)
+                localStorage.removeItem('naze_last_user');
+                currentUser = '';
+                document.getElementById('mainScreen').classList.add('hidden');
+                document.getElementById('mainScreen').style.display = 'none';
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('loginUser').value = '';
+                document.getElementById('loginPass').value = '';
+                document.getElementById('loginError').innerHTML = '';
+            });
+        }
+
+        function addNewAccount() {
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('mainScreen').style.display = 'none';
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+            document.getElementById('loginError').innerHTML = '';
+        }
+
+        function deleteCurrentAccount() {
+            const user = getCurrentUser();
+            const deviceAccounts = JSON.parse(localStorage.getItem('naze_device_accounts') || '[]');
+            
+            if (deviceAccounts.length <= 1) {
+                showAlert('Tidak bisa menghapus satu-satunya akun di device ini!\nGunakan Logout untuk keluar.');
+                return;
+            }
+            
+            showConfirm(`Hapus akun ${user.username} dari device ini?`, function() {
+                // Hapus dari daftar device
+                const newDeviceAccounts = deviceAccounts.filter(u => u !== user.username);
+                localStorage.setItem('naze_device_accounts', JSON.stringify(newDeviceAccounts));
+                // Pindah ke akun lain yang masih ada di device
+                const nextUser = newDeviceAccounts[0];
+                doSwitchAccount(nextUser);
+                showSetting();
+            });
+        }
+
+        // ==================== LOGIN ====================
+        window.login = async function() {
+            const username = document.getElementById('loginUser').value.trim();
+            const password = document.getElementById('loginPass').value.trim();
+            
+            if (!username || !password) {
+                document.getElementById('loginError').innerHTML = 'Username dan password harus diisi!';
+                return;
+            }
+
+            document.getElementById('loginError').innerHTML = '<span style="color:#0f5e4a">Memeriksa akun...</span>';
+            await syncFromCloud();
+            
+            const user = accounts.find(acc => acc.username === username && acc.password === password);
+            
+            if (!user) {
+                document.getElementById('loginError').innerHTML = 'Username atau password salah!';
+                return;
+            }
+            
+            if (isExpired(user.expire)) {
+                document.getElementById('loginError').innerHTML = 'Akun sudah kadaluarsa!';
+                return;
+            }
+            
+            currentUser = user.username;
+
+            // Simpan ke daftar akun device ini
+            const deviceAccounts = JSON.parse(localStorage.getItem('naze_device_accounts') || '[]');
+            if (!deviceAccounts.includes(username)) {
+                deviceAccounts.push(username);
+                localStorage.setItem('naze_device_accounts', JSON.stringify(deviceAccounts));
+            }
+            // Simpan sebagai akun terakhir login
+            localStorage.setItem('naze_last_user', username);
+            
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.remove('hidden');
+            document.getElementById('mainScreen').style.display = 'flex';
+            
+            updateHeader();
+            showHome();
+            startAutoSync();
+        };
+
+        // ==================== INIT (Auto Login) ====================
+        (async function init() {
+            const lastUser = localStorage.getItem('naze_last_user');
+            if (lastUser) {
+                // Ada akun terakhir — coba auto login
+                await syncFromCloud();
+                const user = accounts.find(acc => acc.username === lastUser);
+                if (user && !isExpired(user.expire)) {
+                    currentUser = lastUser;
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('mainScreen').classList.remove('hidden');
+                    document.getElementById('mainScreen').style.display = 'flex';
+                    updateHeader();
+                    showHome();
+                    startAutoSync();
+                    return;
+                } else {
+                    // Akun expired atau tidak ditemukan, hapus last user
+                    localStorage.removeItem('naze_last_user');
+                }
+            }
+            // Tidak ada auto login — tampilkan halaman login
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+        })();
+    </script>
+</body>
+</html>
