@@ -1,0 +1,21 @@
+{
+  "name": "publicchatv2",
+  "displayName": "𝙏𝙚𝙖𝙢 𝘿𝙖𝙧𝙠𝙅𝙖𝙫𝙖",
+  "version": "1.0.0",
+  "description": "Built with APK Builder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"test\""
+  },
+  "keywords": [
+    "cordova",
+    "android"
+  ],
+  "author": "APK Builder",
+  "license": "MIT",
+  "devDependencies": {},
+  "cordova": {
+    "platforms": [],
+    "plugins": {}
+  }
+}
